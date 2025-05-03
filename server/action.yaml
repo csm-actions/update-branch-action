@@ -48,7 +48,7 @@ runs:
     - if: failure()
       shell: bash
       env:
-        GH_TOKEN: ${{fromJson(inputs.outputs).github_token}}
+        GH_TOKEN: ${{ steps.token.outputs.token }}
         REPO: ${{ steps.info.outputs.repo_full_name }}
         NUMBER: ${{ steps.info.outputs.pr_number }}
         COMMENT: |
