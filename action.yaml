@@ -26,7 +26,7 @@ inputs:
     description: |
       The pull request number of the updated pull request
     required: false
-    default: ${{github.event.pull_request.number}}
+    default: ${{github.event.issue.number}}
 runs:
   using: composite
   steps:
