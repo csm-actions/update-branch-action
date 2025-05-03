@@ -1,0 +1,62 @@
+name: Update Branch
+description: Update Branch
+inputs:
+  app_id:
+    description: |
+      GitHub App ID
+    required: true
+  app_private_key:
+    description: |
+      GitHub App Private Key
+    required: true
+runs:
+  using: composite
+  steps:
+    - id: info
+      shell: bash
+      env:
+        # ${repo}/${pull_request_number}
+        LABEL_DESCRIPTION: ${{ github.event.label.description }}
+      run: |
+        repo_full_name=${LABEL_DESCRIPTION%/*}
+        {
+          echo "repo_full_name=${repo_full_name}"
+          echo "repo=${repo_full_name#*/}"
+          echo "pr_number=${LABEL_DESCRIPTION##*/}"
+        } >> "$GITHUB_OUTPUT"
+
+    - uses: actions/create-github-app-token@v2
+      id: token
+      with:
+        app-id: ${{inputs.app_id}}
+        private-key: ${{inputs.app_private_key}}
+        permission-pull-requests: write
+        permission-contents: write
+        owner: ${{ github.repository_owner }}
+        repositories: |
+          ${{ steps.info.outputs.repo }}
+
+    - shell: bash
+      env:
+        GH_TOKEN: ${{ steps.token.outputs.token }}
+        REPO: ${{ steps.info.outputs.repo_full_name }}
+        NUMBER: ${{ steps.info.outputs.pr_number }}
+      run: |
+        gh pr update-branch "$NUMBER" --repo "$REPO"
+
+    # Create a pull request comment to report an error
+    - if: failure()
+      shell: bash
+      env:
+        GH_TOKEN: ${{fromJson(inputs.outputs).github_token}}
+        REPO: ${{ steps.info.outputs.repo_full_name }}
+        NUMBER: ${{ steps.info.outputs.pr_number }}
+        COMMENT: |
+          ## :x: Failed to update the branch
+
+          [Workflow](${{github.server_url}}/${{github.repository}}/actions/runs/${{github.run_id}})
+      run: |
+        gh pr comment \
+          -R "$REPO" \
+          -b "${COMMENT}" \
+          "$NUMBER"
