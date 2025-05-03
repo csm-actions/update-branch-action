@@ -31,7 +31,7 @@ runs:
   using: composite
   steps:
     # Create a GitHub App token to create and delete a label
-    - uses: actions/create-github-app-token@v2
+    - uses: actions/create-github-app-token@db3cdf40984fe6fd25ae19ac2bf2f4886ae8d959 # v2.0.5
       id: token
       with:
         app-id: ${{inputs.app_id}}
@@ -41,7 +41,7 @@ runs:
         repositories: |
           ${{inputs.server_repository}}
 
-    - uses: securefix-action/label-action@main
+    - uses: securefix-action/label-action@c0244604f0f8bb3ff8136e650d2161b6714aea72 # v0.0.1
       with:
         prefix: update-branch-
         description: ${{github.repository_owner}}/${{inputs.repository && inputs.repository || github.event.repository.name}}/${{inputs.pull_request_number}}
