@@ -44,7 +44,6 @@ This action allows you to update pull request branches securely by [the Client/S
 1. [Fix the server workflow if necessary](#fix-the-server-workflow-if-necessary)
 1. [Fix the client workflow if necessary](#fix-the-client-workflow-if-necessary)
 1. [Create a pull request in the client repository](#create-a-pull-request-in-the-client-repository)
-1. [Add a commit to the client repository's default branch](#add-a-commit-to-the-client-repositorys-default-branch)
 1. [Post a comment `/ub` to the pull request](#post-a-comment-ub-to-the-pull-request)
 
 ### GitHub App for server
@@ -98,28 +97,19 @@ Please create a pull request in the client repository.
 An empty commit is enough.
 
 ```sh
-git checkout -b test-pr
+git checkout -b test-pr HEAD~1
 git commit --allow-empty -m test
 gh pr create
 ```
 
-### Add a commit to the client repository's default branch
-
-Please add a commit to the client repository's default branch.
-An empty commit is enough.
-
-```sh
-git checkout -b test-commit origin/main
-git commit --allow-empty -m test
-gh pr create # Create and merge a pull request
-```
+e.g. [demo-client#15](https://github.com/securefix-action/demo-client/pull/15)
 
 ### Post a comment `/ub` to the pull request
 
 Please post a comment `/ub` to the pull request you created.
 Then the client workflow and server workflow are run and the pull request branch is updated.
 
-![image](https://github.com/user-attachments/assets/3c513b13-36e3-43f8-bf7b-13a776d52925)
+![image](https://github.com/user-attachments/assets/f62f5677-982b-4eb2-9634-2eaf1ecbbd78)
 
 ## Actions
 
