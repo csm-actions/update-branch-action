@@ -50,7 +50,7 @@ runs:
         repositories: |
           ${{inputs.server_repository_name}}
 
-    - uses: securefix-action/label-action@e882c05058dd13a9072a60980f490728cea7de1c # v0.1.0
+    - uses: csm-actions/label-action@e882c05058dd13a9072a60980f490728cea7de1c # v0.1.0
       with:
         prefix: update-branch-
         description: ${{inputs.repository_owner}}/${{inputs.repository_name}}/${{inputs.pull_request_number}}

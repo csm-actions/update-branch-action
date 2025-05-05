@@ -1,8 +1,8 @@
 # Update Branch Action
 
-[![License](http://img.shields.io/badge/license-mit-blue.svg?style=flat-square)](https://raw.githubusercontent.com/securefix-action/update-branch-action/main/LICENSE) | [Versioning Policy](https://github.com/suzuki-shunsuke/versioning-policy/blob/main/POLICY.md)
+[![License](http://img.shields.io/badge/license-mit-blue.svg?style=flat-square)](https://raw.githubusercontent.com/csm-actions/update-branch-action/main/LICENSE) | [Versioning Policy](https://github.com/suzuki-shunsuke/versioning-policy/blob/main/POLICY.md)
 
-`Update Branch Action` is a set of GitHub Actions to update pull request branches securely by [the Client/Server Model](https://github.com/securefix-action/client-server-model-docs).
+`Update Branch Action` is a set of GitHub Actions to update pull request branches securely by [the Client/Server Model](https://github.com/csm-actions/client-server-model-docs).
 
 ![image](https://github.com/user-attachments/assets/3c513b13-36e3-43f8-bf7b-13a776d52925)
 
@@ -27,16 +27,16 @@ There are several cases where you may want to update a branch in CI.
   - Pull requests created by GitHub Apps like Renovate are sometimes restricted so that humans cannot modify them.
 - A reviewer may want to update a branch via CI using a GitHub App
 
-This action allows you to update pull request branches securely by [the Client/Server Model](https://github.com/securefix-action/client-server-model-docs).
+This action allows you to update pull request branches securely by [the Client/Server Model](https://github.com/csm-actions/client-server-model-docs).
 
 ## Example
 
-- [Client Workflow](https://github.com/securefix-action/demo-client/blob/main/.github/workflows/update_branch.yaml)
-- [Server Workflow](https://github.com/securefix-action/demo-server/blob/df6e4805d058889b2258334c173e99214ac2bdf6/.github/workflows/securefix.yaml#L29-L40)
+- [Client Workflow](https://github.com/csm-actions/demo-client/blob/main/.github/workflows/update_branch.yaml)
+- [Server Workflow](https://github.com/csm-actions/demo-server/blob/df6e4805d058889b2258334c173e99214ac2bdf6/.github/workflows/securefix.yaml#L29-L40)
 
 ## Getting Started
 
-1. Create two repositories from templates [demo-server](https://github.com/new?template_name=demo-server&template_owner=securefix-action) and [demo-client](https://github.com/new?template_name=demo-client&template_owner=securefix-action)
+1. Create two repositories from templates [demo-server](https://github.com/new?template_name=demo-server&template_owner=csm-actions) and [demo-client](https://github.com/new?template_name=demo-client&template_owner=csm-actions)
 1. [Create a GitHub App for server](#github-app-for-server)
 1. [Create a GitHub App for client](#github-app-for-client)
 1. Create GitHub App private keys
@@ -80,13 +80,13 @@ Add GitHub App's private keys and ID to Repository Secrets and Variables
 
 ### Fix the server workflow if necessary
 
-[Workflow](https://github.com/securefix-action/demo-server/blob/main/.github/workflows/securefix.yaml)
+[Workflow](https://github.com/csm-actions/demo-server/blob/main/.github/workflows/securefix.yaml)
 
 If you change a variable name and a secret name, please fix the workflow.
 
 ### Fix the client workflow if necessary
 
-[Workflow](https://github.com/securefix-action/demo-client/blob/main/.github/workflows/update_branch.yaml)
+[Workflow](https://github.com/csm-actions/demo-client/blob/main/.github/workflows/update_branch.yaml)
 
 - If you change a variable name and a secret name, please fix the workflow
 - If you change the server repository name, please fix the input `server_repository`
@@ -102,7 +102,7 @@ git commit --allow-empty -m test
 gh pr create
 ```
 
-e.g. [demo-client#15](https://github.com/securefix-action/demo-client/pull/15)
+e.g. [demo-client#15](https://github.com/csm-actions/demo-client/pull/15)
 
 ### Post a comment `/ub` to the pull request
 
@@ -115,5 +115,5 @@ Then the client workflow and server workflow are run and the pull request branch
 
 Update Branch Action composes of following actions:
 
-- [securefix-action/update-branch-action](action.yaml): Client action
-- [securefix-action/update-branch-action/server](server/action.yaml): Server action
+- [csm-actions/update-branch-action](action.yaml): Client action
+- [csm-actions/update-branch-action/server](server/action.yaml): Server action
