@@ -13,15 +13,24 @@ inputs:
     description: |
       GitHub App Private Key
     required: true
-  server_repository:
+  server_repository_name:
     description: |
       Server repository name
     required: true
 
-  repository:
+  server_repository_owner:
     description: |
-      The repository name of the updated pull request
+      Server repository owner
     required: false
+    default: ${{github.repository_owner}}
+  repository_owner:
+    description: The repository owner of the updated pull request
+    required: false
+    default: ${{github.repository_owner}}
+  repository_name:
+    description: The repository name of the updated pull request
+    required: false
+    default: ${{github.event.repository.name}}
   pull_request_number:
     description: |
       The pull request number of the updated pull request
@@ -37,13 +46,14 @@ runs:
         app-id: ${{inputs.app_id}}
         private-key: ${{inputs.app_private_key}}
         permission-issues: write
-        owner: ${{ github.repository_owner }}
+        owner: ${{ inputs.server_repository_owner }}
         repositories: |
-          ${{inputs.server_repository}}
+          ${{inputs.server_repository_name}}
 
     - uses: securefix-action/label-action@c6acf8ab33ab3b904781d7aabd39b72543791b88 # v0.0.2
       with:
         prefix: update-branch-
-        description: ${{github.repository_owner}}/${{inputs.repository && inputs.repository || github.event.repository.name}}/${{inputs.pull_request_number}}
-        repository: ${{inputs.server_repository}}
+        description: ${{inputs.repository_owner}}/${{inputs.repository_name}}/${{inputs.pull_request_number}}
+        repository_owner: ${{inputs.server_repository_owner}}
+        repository_name: ${{inputs.server_repository_name}}
         github_token: ${{steps.token.outputs.token}}
