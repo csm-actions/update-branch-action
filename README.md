@@ -115,5 +115,5 @@ Then the client workflow and server workflow are run and the pull request branch
 
 Update Branch Action composes of following actions:
 
-- [securefix-action/update-branch-action](docs/client.md) ([action.yaml](action.yaml)): Client action
-- [securefix-action/update-branch-action/server](server) ([action.yaml](server/action.yaml)): Server action
+- [securefix-action/update-branch-action](action.yaml): Client action
+- [securefix-action/update-branch-action/server](server/action.yaml): Server action
