@@ -15,6 +15,7 @@ jobs:
         with:
           app_id: "dummy"
           app_private_key: "dummy"
+          server_repository_name: demo-server
       - uses: ./server/prepare
         id: prepare
         with:
