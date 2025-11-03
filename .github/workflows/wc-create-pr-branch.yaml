@@ -1,0 +1,56 @@
+---
+name: wc-create-pr-branch
+run-name: wc-create-pr-branch (${{inputs.pr}})
+on:
+  workflow_call:
+    inputs:
+      version:
+        type: string
+        description: version
+        required: true
+      pr:
+        description: "Pull Request Number"
+        required: false
+        type: string
+      is_comment:
+        description: If the comment is posted
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  create-pr-branch:
+    timeout-minutes: 15
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
+      - if: inputs.pr != ''
+        run: gh pr checkout "$PR"
+        env:
+          GITHUB_TOKEN: ${{github.token}}
+          PR: ${{inputs.pr}}
+
+      - uses: aquaproj/aqua-installer@ea518c135a02fc11ff8024364510c181a5c6b342 # v4.0.3
+        with:
+          aqua_version: v2.55.1
+        env:
+          GITHUB_TOKEN: ${{github.token}}
+
+      - uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
+        with:
+          node-version-file: .node-version
+          cache-dependency-path: package-lock.json
+          cache: npm
+      - run: npm ci
+
+      - run: npm run build
+
+      - uses: suzuki-shunsuke/release-js-action@7586139c29abe68e2bc84395ac4300f20112b764 # v0.1.8
+        with:
+          version: ${{inputs.version}}
+          is_comment: ${{inputs.is_comment}}
