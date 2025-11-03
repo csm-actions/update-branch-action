@@ -43,13 +43,17 @@ export const main = async () => {
     serverRepositoryOwner: core.getInput("server_repository_owner"),
     owner: core.getInput("repository_owner") || github.context.repo.owner,
     repo: core.getInput("repository_name") || github.context.repo.repo,
-    pullRequestNumber: core.getInput("pull_request_number"),
+    pullRequestNumber: core.getInput("pull_request_number").trim(),
   };
 
-  const numbers: number[] = [];
-  for (const n of inputs.pullRequestNumber.split("\n")) {
-    const a = n.split(",").map(s => s.trim()).filter(s => s.length > 0).map(Number);
-    numbers.push(...a);
+  let numbers: number[] = [];
+  if (inputs.pullRequestNumber.startsWith("[")) {
+    numbers = JSON.parse(inputs.pullRequestNumber);
+  } else {
+    for (const n of inputs.pullRequestNumber.split("\n")) {
+      const a = n.split(",").map(s => s.trim()).filter(s => s.length > 0).map(Number);
+      numbers.push(...a);
+    }
   }
 
   const permissions: githubAppToken.Permissions = {
