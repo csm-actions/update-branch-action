@@ -117,3 +117,8 @@ Update Branch Action composes of following actions:
 
 - [csm-actions/update-branch-action](action.yaml): Client action
 - [csm-actions/update-branch-action/server](server/action.yaml): Server action
+
+## Actions' Available Versions
+
+As of Update Branch Action v0.1.2, it is released using [release-js-action](https://github.com/suzuki-shunsuke/release-js-action).
+[About available versions, please see the document.](https://github.com/suzuki-shunsuke/release-js-action/blob/main/docs/available_versions.md)
