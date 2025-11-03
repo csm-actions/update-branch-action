@@ -90,4 +90,5 @@ export const main = async () => {
       description: description,
     });
   }
+  core.notice(`Branches will be updated. Please check the server workflow: ${process.env.GITHUB_SERVER_URL}/${inputs.serverRepositoryOwner}/${inputs.serverRepositoryName}/actions`);
 };
