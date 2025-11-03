@@ -33,7 +33,8 @@ inputs:
     default: ${{github.event.repository.name}}
   pull_request_number:
     description: |
-      The pull request number of the updated pull request
+      Pull request numbers of the updated pull requests.
+      You can specify multiple pull request numbers separated by commas or newlines.
     required: false
     default: ${{github.event.issue.number}}
 runs:

@@ -10,7 +10,7 @@ type Inputs = {
   serverRepositoryOwner: string;
   owner: string;
   repo: string;
-  pullRequestNumber: number;
+  pullRequestNumber: string;
 };
 
 export const main = async () => {
@@ -43,8 +43,18 @@ export const main = async () => {
     serverRepositoryOwner: core.getInput("server_repository_owner"),
     owner: core.getInput("repository_owner") || github.context.repo.owner,
     repo: core.getInput("repository_name") || github.context.repo.repo,
-    pullRequestNumber: parseInt(core.getInput("pull_request_number")),
+    pullRequestNumber: core.getInput("pull_request_number").trim(),
   };
+
+  let numbers: number[] = [];
+  if (inputs.pullRequestNumber.startsWith("[")) {
+    numbers = JSON.parse(inputs.pullRequestNumber);
+  } else {
+    for (const n of inputs.pullRequestNumber.split("\n")) {
+      const a = n.split(",").map(s => s.trim()).filter(s => s.length > 0).map(Number);
+      numbers.push(...a);
+    }
+  }
 
   const permissions: githubAppToken.Permissions = {
     issues: "write",
@@ -61,22 +71,23 @@ export const main = async () => {
     repositories: [inputs.serverRepositoryName],
     permissions: permissions,
   });
-  const labelName = newName("update-branch-");
-  const description = `${inputs.owner}/${inputs.repo}/${inputs.pullRequestNumber}`;
-  core.info(`creating a label: ${JSON.stringify({
-    owner: inputs.serverRepositoryOwner,
-    repo: inputs.serverRepositoryName,
-    label: {
+  for (const prNumber of numbers) {
+    const labelName = newName("update-branch-");
+    const description = `${inputs.owner}/${inputs.repo}/${prNumber}`;
+    core.info(`creating a label: ${JSON.stringify({
+      owner: inputs.serverRepositoryOwner,
+      repo: inputs.serverRepositoryName,
+      label: {
+        name: labelName,
+        description: description,
+      },
+    })}`);
+    const octokit = github.getOctokit(token.token);
+    await octokit.rest.issues.createLabel({
+      owner: inputs.serverRepositoryOwner,
+      repo: inputs.serverRepositoryName,
       name: labelName,
       description: description,
-    },
-  })}`);
-  const octokit = github.getOctokit(token.token);
-  await octokit.rest.issues.createLabel({
-    owner: inputs.serverRepositoryOwner,
-    repo: inputs.serverRepositoryName,
-    name: labelName,
-    description: description,
-  });
-  core.notice("a label was created");
+    });
+  }
 };
