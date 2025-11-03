@@ -42,6 +42,7 @@ runs:
         REPO: ${{ steps.info.outputs.repo_full_name }}
         NUMBER: ${{ steps.info.outputs.pr_number }}
       run: |
+        echo "::notice:: Updating a pr branch ${GITHUB_SERVER_URL}/${REPO}/pull/${NUMBER}"
         gh pr update-branch "$NUMBER" --repo "$REPO"
 
     # Create a pull request comment to report an error
