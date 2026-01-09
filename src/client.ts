@@ -48,6 +48,11 @@ export const action = async () => {
       errors.push(result.reason);
     }
   }
+  if (results.some((result) => result.status === "fulfilled")) {
+    core.notice(
+      `Branches will be updated. Please check the server workflow: ${github.context.serverUrl}/${serverRepositoryOwner}/${serverRepositoryName}/actions`,
+    );
+  }
   if (errors.length > 0) {
     throw new Error(`Failed to update ${errors.length} PR(s)`);
   }
