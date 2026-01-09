@@ -5,6 +5,11 @@ branding:
   icon: git-commit
   color: green
 inputs:
+  action:
+    description: |
+      Action mode: client or server
+    required: false
+    default: client
   app_id:
     description: |
       GitHub App ID
@@ -13,11 +18,12 @@ inputs:
     description: |
       GitHub App Private Key
     required: true
+
+  # For Client
   server_repository_name:
     description: |
       Server repository name
-    required: true
-
+    required: false
   server_repository_owner:
     description: |
       Server repository owner
