@@ -5,11 +5,6 @@ branding:
   icon: git-commit
   color: green
 inputs:
-  action:
-    description: |
-      Action mode: client or server
-    required: false
-    default: client
   app_id:
     description: |
       GitHub App ID

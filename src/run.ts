@@ -16,22 +16,16 @@ const revoke = async (token: string, expiresAt: string) => {
 };
 
 export const main = async () => {
-  const action = core.getInput("action");
-
   if (core.getState("post")) {
     await revoke(core.getState("token"), core.getState("expires_at"));
     return;
   }
   core.saveState("post", "true");
 
-  switch (action) {
-    case "client":
-      await client.action();
-      return;
-    case "server":
-      await server.action();
-      return;
-    default:
-      throw new Error(`Unknown action: ${action}`);
+  const serverRepositoryName = core.getInput("server_repository_name");
+  if (serverRepositoryName) {
+    await client.action();
+  } else {
+    await server.action();
   }
 };
