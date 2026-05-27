@@ -1,6 +1,7 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 import * as githubAppToken from "@suzuki-shunsuke/github-app-token";
+import { deleteLabel } from "./delete_label";
 
 const parseLabelDescription = (
   description: string,
@@ -20,10 +21,17 @@ const parseLabelDescription = (
 };
 
 export const action = async () => {
-  const labelDescription = github.context.payload.label?.description;
+  const labelDescription = core.getInput("label_description", {
+    required: false,
+  });
+  const labelName = core.getInput("label_name", {
+    required: false,
+  });
   if (!labelDescription) {
-    throw new Error("Label description is not found in the event payload");
+    throw new Error("Label description is required");
   }
+
+  await deleteLabel(labelName);
 
   const { owner, repo, prNumber } = parseLabelDescription(labelDescription);
 
