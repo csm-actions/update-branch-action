@@ -45,9 +45,6 @@ export const action = async () => {
     repositories: [repo],
     permissions: permissions,
   });
-  core.setSecret(token.token);
-  core.saveState("token", token.token);
-  core.saveState("expires_at", token.expiresAt);
 
   const octokit = github.getOctokit(token.token);
 
@@ -70,5 +67,19 @@ export const action = async () => {
       body: `## :x: Failed to update the branch\n\n[Workflow](${workflowUrl})`,
     });
     throw error;
+  } finally {
+    await revoke(token);
   }
+};
+
+export const revoke = async (token: githubAppToken.Token) => {
+  if (!token) {
+    return;
+  }
+  if (token.expiresAt && githubAppToken.hasExpired(token.expiresAt)) {
+    core.info("GitHub App token has already expired");
+    return;
+  }
+  core.info("Revoking GitHub App token");
+  return githubAppToken.revoke(token.token);
 };
