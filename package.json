@@ -2,7 +2,9 @@
   "type": "module",
   "scripts": {
     "build": "ncc build src/index.ts --license LICENSE",
-    "fmt": "prettier --write ."
+    "fmt": "prettier --write .",
+    "lint": "eslint && tsc --noEmit",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@actions/core": "3.0.1",
@@ -17,6 +19,11 @@
     "@types/tmp": "0.2.6",
     "@vercel/ncc": "0.38.4",
     "ts-node": "10.9.2",
-    "typescript": "6.0.3"
+    "typescript": "6.0.3",
+    "globals": "17.6.0",
+    "jiti": "2.7.0",
+    "@eslint/js": "10.0.1",
+    "eslint": "10.4.0",
+    "typescript-eslint": "8.59.4"
   }
 }
