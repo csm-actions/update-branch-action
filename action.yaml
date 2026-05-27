@@ -38,6 +38,28 @@ inputs:
       You can specify multiple pull request numbers separated by commas or newlines.
     required: false
     default: ${{github.event.issue.number}}
+
+  label_name:
+    description: |
+      Label name to trigger the action.
+    required: false
+    default: ${{github.event.label.name}}
+  label_description:
+    description: |
+      Label description to trigger the action.
+    required: false
+    default: ${{github.event.label.description}}
+  delete_label:
+    description: |
+      Either true or false. If true, the label is deleted.
+    required: false
+    default: "true"
+  github_token_to_delete_label:
+    description: |
+      GitHub token to delete the label.
+    required: false
+    default: "${{github.token}}"
+
 runs:
   using: node24
   main: dist/index.js
