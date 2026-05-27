@@ -32,7 +32,7 @@ This action allows you to update pull request branches securely by [the Client/S
 ## Example
 
 - [Client Workflow](https://github.com/csm-actions/demo-client/blob/main/.github/workflows/update_branch.yaml)
-- [Server Workflow](https://github.com/csm-actions/demo-server/blob/df6e4805d058889b2258334c173e99214ac2bdf6/.github/workflows/securefix.yaml#L29-L40)
+- [Server Workflow](https://github.com/csm-actions/demo-server/blob/main/.github/workflows/update_branch.yaml)
 
 ## Getting Started
 
