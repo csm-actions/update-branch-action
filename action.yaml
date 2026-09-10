@@ -11,8 +11,18 @@ inputs:
     required: true
   app_private_key:
     description: |
-      GitHub App Private Key
-    required: true
+      GitHub App Private Key.
+      Either app_private_key or aws_kms_key_id is required.
+    required: false
+  aws_kms_key_id:
+    description: |
+      Key ID, key ARN, alias name, or alias ARN of an AWS KMS key holding the
+      GitHub App private key.
+      Set this instead of app_private_key when the private key is stored in AWS
+      KMS and can never be exported.
+      The region and credentials are resolved from the standard AWS environment
+      variables, which aws-actions/configure-aws-credentials sets up.
+    required: false
 
   # For Client
   server_repository_name:

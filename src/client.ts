@@ -1,10 +1,10 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 import * as updateBranchAction from "@csm-actions/update-branch-action";
+import { newAppOctokit } from "./app_octokit";
 
 export const action = async () => {
-  const appID = core.getInput("app_id", { required: true });
-  const appPrivateKey = core.getInput("app_private_key", { required: true });
+  const appOctokit = newAppOctokit();
   const serverRepositoryName = core.getInput("server_repository_name", {
     required: true,
   });
@@ -30,8 +30,7 @@ export const action = async () => {
   const results = await Promise.allSettled(
     numbers.map((prNumber) =>
       updateBranchAction.update({
-        appID,
-        appPrivateKey,
+        appOctokit,
         serverRepositoryName,
         serverRepositoryOwner,
         owner,
