@@ -94,12 +94,12 @@ permissions:
   contents: read
 
 steps:
-  - uses: aws-actions/configure-aws-credentials@v6
+  - uses: aws-actions/configure-aws-credentials@cbe3b392738ccf3f987d68400dafcf4b0624a56c # v6.2.4
     with:
       role-to-assume: ${{vars.ROLE_TO_ASSUME}}
       aws-region: ap-northeast-1
 
-  - uses: csm-actions/update-branch-action@v0
+  - uses: csm-actions/update-branch-action@12ba999fb8b5a99142fa5741d3f365e21f22f3c8 # v1.0.0
     with:
       app_id: ${{vars.DEMO_CLIENT_APP_ID}}
       aws_kms_key_id: ${{vars.KMS_KEY_ID}}
