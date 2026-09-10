@@ -88,6 +88,9 @@ and only the JSON Web Token signing is delegated to KMS.
 Set the input `aws_kms_key_id` instead of `app_private_key`, and let
 `aws-actions/configure-aws-credentials` set up the AWS credentials.
 
+The app can be identified by either `client_id` or `app_id`. GitHub recommends
+the Client ID, and it takes precedence when both are set.
+
 ```yaml
 permissions:
   id-token: write # Required to assume the AWS IAM role via OIDC
