@@ -78,6 +78,37 @@ Add GitHub App's private keys and ID to Repository Secrets and Variables
   - id: server repository's variable `DEMO_SERVER_APP_ID`
   - private key: server repository's Repository Secret `DEMO_SERVER_PRIVATE_KEY`
 
+### Store the private key in AWS KMS instead (optional)
+
+A GitHub App private key in GitHub Secrets never expires, so anyone who obtains
+it can generate access tokens indefinitely.
+Importing the key into AWS KMS removes that risk: the key can never be exported,
+and only the JSON Web Token signing is delegated to KMS.
+
+Set the input `aws_kms_key_id` instead of `app_private_key`, and let
+`aws-actions/configure-aws-credentials` set up the AWS credentials.
+
+```yaml
+permissions:
+  id-token: write # Required to assume the AWS IAM role via OIDC
+  contents: read
+
+steps:
+  - uses: aws-actions/configure-aws-credentials@v6
+    with:
+      role-to-assume: ${{vars.ROLE_TO_ASSUME}}
+      aws-region: ap-northeast-1
+
+  - uses: csm-actions/update-branch-action@v0
+    with:
+      app_id: ${{vars.DEMO_CLIENT_APP_ID}}
+      aws_kms_key_id: ${{vars.KMS_KEY_ID}}
+```
+
+The KMS key must be an RSA 2048 key whose usage is `SIGN_VERIFY`, created with
+`--origin EXTERNAL` so that the GitHub App private key can be imported into it.
+The IAM role needs `kms:Sign` on that key.
+
 ### Fix the server workflow if necessary
 
 [Workflow](https://github.com/csm-actions/demo-server/blob/main/.github/workflows/securefix.yaml)
