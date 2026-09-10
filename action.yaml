@@ -7,8 +7,16 @@ branding:
 inputs:
   app_id:
     description: |
-      GitHub App ID
-    required: true
+      GitHub App ID.
+      Either app_id or client_id is required.
+    required: false
+  client_id:
+    description: |
+      GitHub App Client ID.
+      Either app_id or client_id is required.
+      GitHub recommends the Client ID, and it takes precedence when both are
+      set.
+    required: false
   app_private_key:
     description: |
       GitHub App Private Key.

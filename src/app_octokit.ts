@@ -12,9 +12,16 @@ import { createJwt } from "@suzuki-shunsuke/github-app-jwt-aws-kms";
  *
  * When aws_kms_key_id is set, the private key never leaves AWS KMS and only the
  * JWT signing is delegated to it. Otherwise app_private_key is used.
+ *
+ * The app is identified by either client_id or app_id. @octokit/auth-app passes
+ * the value straight through as the JSON Web Token issuer, and GitHub accepts
+ * both, recommending the Client ID.
  */
 export const newAppOctokit = (): Octokit => {
-  const appId = core.getInput("app_id", { required: true });
+  const appId = core.getInput("client_id") || core.getInput("app_id");
+  if (!appId) {
+    throw new Error("Either client_id or app_id is required");
+  }
   const kmsKeyId = core.getInput("aws_kms_key_id");
   if (kmsKeyId) {
     core.info(`signing GitHub App JSON Web Tokens with AWS KMS: ${kmsKeyId}`);
