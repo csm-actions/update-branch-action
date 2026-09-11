@@ -1,7 +1,43 @@
 import * as core from "@actions/core";
+import { KMSClient } from "@aws-sdk/client-kms";
 import { createAppAuth } from "@octokit/auth-app";
 import { Octokit } from "@octokit/rest";
-import { createJwt } from "@suzuki-shunsuke/github-app-jwt-aws-kms";
+import { credentials } from "@suzuki-shunsuke/actions-aws-oidc";
+import {
+  createJwt,
+  regionFromKeyId,
+} from "@suzuki-shunsuke/github-app-jwt-aws-kms";
+
+/**
+ * Builds a KMS client.
+ *
+ * When aws_role_to_assume is set, the IAM role is assumed here with the GitHub
+ * OIDC token, and the resulting credentials never leave this process. Later
+ * steps of the job can't see them, unlike credentials that
+ * aws-actions/configure-aws-credentials exports as environment variables or
+ * writes to ~/.aws/credentials.
+ *
+ * Undefined leaves the client to @suzuki-shunsuke/github-app-jwt-aws-kms, which
+ * builds one from the key ARN's region and the standard AWS credential chain,
+ * so aws-actions/configure-aws-credentials works as well.
+ *
+ * The region is resolved here rather than left to that module, which only sees
+ * a client it was given and can't tell it a region afterwards. Without this the
+ * key ARN's region would be ignored and the AWS SDK would fail with "Region is
+ * missing" on a runner that sets none.
+ */
+const newKMSClient = (keyId: string): KMSClient | undefined => {
+  const roleArn = core.getInput("aws_role_to_assume");
+  if (!roleArn) {
+    return undefined;
+  }
+  core.info(`assuming an AWS IAM role with the GitHub OIDC token: ${roleArn}`);
+  return new KMSClient({
+    // Undefined leaves the region to the AWS SDK's own resolution.
+    region: core.getInput("aws_region") || regionFromKeyId(keyId) || undefined,
+    credentials: credentials({ roleArn }),
+  });
+};
 
 /**
  * Builds an Octokit client authenticated as the GitHub App.
@@ -29,7 +65,11 @@ export const newAppOctokit = (): Octokit => {
       authStrategy: createAppAuth,
       auth: {
         appId,
-        createJwt: createJwt({ keyId: kmsKeyId }),
+        createJwt: createJwt({
+          keyId: kmsKeyId,
+          region: core.getInput("aws_region") || undefined,
+          client: newKMSClient(kmsKeyId),
+        }),
       },
     });
   }

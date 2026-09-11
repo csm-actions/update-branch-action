@@ -85,28 +85,39 @@ it can generate access tokens indefinitely.
 Importing the key into AWS KMS removes that risk: the key can never be exported,
 and only the JSON Web Token signing is delegated to KMS.
 
-Set the input `aws_kms_key_id` instead of `app_private_key`, and let
-`aws-actions/configure-aws-credentials` set up the AWS credentials.
+Set the input `aws_kms_key_id` instead of `app_private_key`.
 
 The app can be identified by either `client_id` or `app_id`. GitHub recommends
 the Client ID, and it takes precedence when both are set.
+
+Set `aws_role_to_assume` and the action assumes the IAM role itself with the
+GitHub OIDC token. The AWS credentials then stay inside this action and are
+never exported, so later steps of the job can't see them. The session lasts 900
+seconds, the shortest AWS STS accepts, which is far longer than the signing
+takes.
 
 ```yaml
 permissions:
   id-token: write # Required to assume the AWS IAM role via OIDC
   contents: read
 
-steps:
-  - uses: aws-actions/configure-aws-credentials@cbe3b392738ccf3f987d68400dafcf4b0624a56c # v6.2.4
-    with:
-      role-to-assume: ${{vars.ROLE_TO_ASSUME}}
-      aws-region: ap-northeast-1
+env:
+  AWS_REGION: ap-northeast-1
 
+steps:
   - uses: csm-actions/update-branch-action@12ba999fb8b5a99142fa5741d3f365e21f22f3c8 # v1.0.0
     with:
-      app_id: ${{vars.DEMO_CLIENT_APP_ID}}
+      client_id: ${{vars.DEMO_CLIENT_APP_CLIENT_ID}}
+      aws_role_to_assume: ${{vars.ROLE_TO_ASSUME}}
       aws_kms_key_id: ${{vars.KMS_KEY_ID}}
 ```
+
+`aws_role_to_assume` covers assuming a role with OIDC and nothing else. If you
+need any of the other options `aws-actions/configure-aws-credentials` offers,
+such as an external ID, a session policy or a custom STS endpoint, use that
+action and leave `aws_role_to_assume` unset. The standard AWS credential chain
+is used then, so it keeps working as before, though the credentials it sets up
+are visible to the rest of the job.
 
 The KMS key must be an RSA 2048 key whose usage is `SIGN_VERIFY`, created with
 `--origin EXTERNAL` so that the GitHub App private key can be imported into it.
