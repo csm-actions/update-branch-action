@@ -101,9 +101,6 @@ permissions:
   id-token: write # Required to assume the AWS IAM role via OIDC
   contents: read
 
-env:
-  AWS_REGION: ap-northeast-1
-
 steps:
   - uses: csm-actions/update-branch-action@d77c511bd7d3e25dbbddd7c5b6ca0414e748838d # v1.1.0
     with:
