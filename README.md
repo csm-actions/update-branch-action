@@ -114,10 +114,15 @@ steps:
 
 `aws_role_to_assume` covers assuming a role with OIDC and nothing else. If you
 need any of the other options `aws-actions/configure-aws-credentials` offers,
-such as an external ID, a session policy or a custom STS endpoint, use that
-action and leave `aws_role_to_assume` unset. The standard AWS credential chain
-is used then, so it keeps working as before, though the credentials it sets up
-are visible to the rest of the job.
+such as an external ID or a session policy, use that action and leave
+`aws_role_to_assume` unset. The credentials it exports as `AWS_ACCESS_KEY_ID`,
+`AWS_SECRET_ACCESS_KEY` and `AWS_SESSION_TOKEN` are read then, though they are
+visible to the rest of the job.
+
+Those environment variables are the only other source. A profile in
+`~/.aws/credentials`, IMDS on a self-hosted EC2 runner and the credentials of an
+ECS or EKS task are not read, so reach for
+`aws-actions/configure-aws-credentials` to use any of them.
 
 The KMS key must be an RSA 2048 key whose usage is `SIGN_VERIFY`, created with
 `--origin EXTERNAL` so that the GitHub App private key can be imported into it.
