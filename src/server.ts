@@ -66,6 +66,10 @@ export const action = async () => {
       pull_number: prNumber,
     });
   } catch (error) {
+    if (isAlreadyUpToDate(error)) {
+      core.notice("The branch is already up to date. Skipping the update.");
+      return;
+    }
     // Post error comment to PR
     const workflowUrl = `${process.env.GITHUB_SERVER_URL}/${github.context.repo.owner}/${github.context.repo.repo}/actions/runs/${github.context.runId}`;
     await octokit.rest.issues.createComment({
@@ -78,6 +82,20 @@ export const action = async () => {
   } finally {
     await revoke(token);
   }
+};
+
+// The update-a-pull-request-branch API returns 422 when the head branch already contains the base branch.
+// https://docs.github.com/rest/pulls/pulls#update-a-pull-request-branch
+export const isAlreadyUpToDate = (error: unknown): boolean => {
+  if (typeof error !== "object" || error === null) {
+    return false;
+  }
+  const { status, message } = error as { status?: unknown; message?: unknown };
+  return (
+    status === 422 &&
+    typeof message === "string" &&
+    message.includes("There are no new commits on the base branch")
+  );
 };
 
 export const revoke = async (token: githubAppToken.Token) => {
