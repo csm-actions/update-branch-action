@@ -9,7 +9,7 @@ const parseLabelDescription = (
 ): { owner: string; repo: string; prNumber: number } => {
   // Format: "owner/repo/pr_number"
   const parts = description.split("/");
-  if (parts.length !== 3) {
+  if (parts.length < 3) {
     throw new Error(
       `Invalid label description format: ${description}. Expected format: owner/repo/pr_number`,
     );
