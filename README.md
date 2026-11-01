@@ -124,7 +124,7 @@ permissions:
   contents: read
 
 steps:
-  - uses: csm-actions/update-branch-action@459fdfc22c30361386e65e7fcbe89d79634894d7 # v1.1.1
+  - uses: csm-actions/update-branch-action@9b6108a09188c55f18054cbfa05cfdabcf648602 # v1.2.0
     with:
       client_id: ${{vars.DEMO_CLIENT_APP_CLIENT_ID}}
       aws_role_to_assume: ${{vars.ROLE_TO_ASSUME}}
