@@ -1,6 +1,5 @@
 # Update Branch Action
 
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/csm-actions/update-branch-action)
 [![License](http://img.shields.io/badge/license-mit-blue.svg?style=flat-square)](https://raw.githubusercontent.com/csm-actions/update-branch-action/main/LICENSE) | [Versioning Policy](https://github.com/suzuki-shunsuke/versioning-policy/blob/main/POLICY.md) | [action.yaml](action.yaml)
 
 `Update Branch Action` is a set of GitHub Actions to update pull request branches securely by [the Client/Server Model](https://github.com/csm-actions/client-server-model-docs).
