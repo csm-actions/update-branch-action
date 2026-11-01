@@ -33,6 +33,15 @@ jobs:
     uses: ./.github/workflows/typos.yaml
     permissions: {}
 
+  # npm run lint (eslint and type check) and npm test
+  test-js:
+    uses: suzuki-shunsuke/js-action-test-workflow/.github/workflows/test.yaml@c834a7dfc9560fb54167eaf33f94eb28f1a4e222 # v0.0.4
+    permissions:
+      contents: read
+      id-token: write
+    secrets:
+      TAKUMI_GUARD_BOT_ID: ${{secrets.TAKUMI_GUARD_BOT_ID}}
+
   create_pr_branch:
     uses: ./.github/workflows/wc-create-pr-branch.yaml
     with:

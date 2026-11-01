@@ -4,7 +4,8 @@
     "build": "ncc build src/index.ts --license LICENSE",
     "fmt": "prettier --write .",
     "lint": "eslint && tsc --noEmit",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest --run"
   },
   "dependencies": {
     "@actions/core": "3.0.1",
@@ -26,6 +27,7 @@
     "jiti": "2.7.0",
     "ts-node": "10.9.2",
     "typescript": "6.0.3",
-    "typescript-eslint": "8.72.1"
+    "typescript-eslint": "8.72.1",
+    "vitest": "5.0.5"
   }
 }
