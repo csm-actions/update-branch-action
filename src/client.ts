@@ -26,10 +26,9 @@ export const parsePullRequestNumbers = (input: string): number[] => {
 
 export const action = async () => {
   const appOctokit = newAppOctokit();
-  const serverRepositoryName = core.getInput("server_repository_name", {
-    required: true,
-  });
+  const serverRepositoryName = core.getInput("server_repository_name");
   const serverRepositoryOwner = core.getInput("server_repository_owner");
+  const serverWorkflowRef = core.getInput("server_workflow_ref");
   const owner = core.getInput("repository_owner") || github.context.repo.owner;
   const repo = core.getInput("repository_name") || github.context.repo.repo;
   const numbers = parsePullRequestNumbers(core.getInput("pull_request_number"));
@@ -38,6 +37,7 @@ export const action = async () => {
     numbers.map((prNumber) =>
       updateBranchAction.update({
         appOctokit,
+        serverWorkflowRef,
         serverRepositoryName,
         serverRepositoryOwner,
         owner,
@@ -54,7 +54,12 @@ export const action = async () => {
       errors.push(result.reason);
     }
   }
-  if (results.some((result) => result.status === "fulfilled")) {
+  // With server_workflow_ref, the URL of each server workflow run is printed
+  // by the library, so this notice is for the label-based flow.
+  if (
+    !serverWorkflowRef &&
+    results.some((result) => result.status === "fulfilled")
+  ) {
     core.notice(
       `Branches will be updated. Please check the server workflow: ${github.context.serverUrl}/${serverRepositoryOwner}/${serverRepositoryName}/actions`,
     );
