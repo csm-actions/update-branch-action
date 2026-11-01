@@ -18,8 +18,25 @@ describe("parsePullRequestNumbers", () => {
     expect(parsePullRequestNumbers("")).toEqual([]);
   });
 
-  // The current behavior: values that aren't numbers become NaN.
-  it("doesn't validate numbers", () => {
-    expect(parsePullRequestNumbers("abc")).toEqual([NaN]);
+  it("accepts numbers in a JSON array as numbers or strings", () => {
+    expect(parsePullRequestNumbers('[1, "2"]')).toEqual([1, 2]);
+  });
+
+  it("fails if a value isn't a positive integer", () => {
+    for (const input of [
+      "abc",
+      "12,abc",
+      "0",
+      "-1",
+      "1.5",
+      "0x1A",
+      "1e3",
+      "[1, null]",
+      "[1.5]",
+    ]) {
+      expect(() => parsePullRequestNumbers(input)).toThrowError(
+        "pull_request_number must be positive integers",
+      );
+    }
   });
 });

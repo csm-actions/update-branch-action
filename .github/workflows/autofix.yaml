@@ -23,8 +23,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{github.token}}
       - run: |
-          # Examples in documents use csm-actions/update-branch-action@latest, which can't be pinned
-          git ls-files | grep -E '\.md$' | xargs pinact run -u -e '^csm-actions/update-branch-action$'
+          git ls-files | grep -E '\.md$' | xargs pinact run -u
           pinact run
         env:
           GITHUB_TOKEN: ${{github.token}}

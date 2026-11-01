@@ -4,13 +4,32 @@ import * as updateBranchAction from "@csm-actions/update-branch-action";
 import { newAppOctokit } from "./app_octokit";
 
 /**
+ * Validates a pull request number strictly, as the server does, so that an
+ * invalid value fails here instead of in the server workflow.
+ */
+const validatePRNumber = (value: unknown): number => {
+  const s = String(value).trim();
+  const n = Number(s);
+  if (!/^[1-9][0-9]*$/.test(s) || !Number.isSafeInteger(n)) {
+    throw new Error(
+      `pull_request_number must be positive integers, got ${JSON.stringify(value)}`,
+    );
+  }
+  return n;
+};
+
+/**
  * Parses pull request numbers separated by commas or newlines,
  * or a JSON array of them.
  */
 export const parsePullRequestNumbers = (input: string): number[] => {
   const pullRequestNumberInput = input.trim();
   if (pullRequestNumberInput.startsWith("[")) {
-    return JSON.parse(pullRequestNumberInput);
+    const parsed: unknown = JSON.parse(pullRequestNumberInput);
+    if (!Array.isArray(parsed)) {
+      throw new Error("pull_request_number must be a JSON array");
+    }
+    return parsed.map(validatePRNumber);
   }
   const numbers: number[] = [];
   for (const n of pullRequestNumberInput.split("\n")) {
@@ -18,7 +37,7 @@ export const parsePullRequestNumbers = (input: string): number[] => {
       .split(",")
       .map((s) => s.trim())
       .filter((s) => s.length > 0)
-      .map(Number);
+      .map(validatePRNumber);
     numbers.push(...a);
   }
   return numbers;
