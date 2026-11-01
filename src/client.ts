@@ -3,6 +3,27 @@ import * as github from "@actions/github";
 import * as updateBranchAction from "@csm-actions/update-branch-action";
 import { newAppOctokit } from "./app_octokit";
 
+/**
+ * Parses pull request numbers separated by commas or newlines,
+ * or a JSON array of them.
+ */
+export const parsePullRequestNumbers = (input: string): number[] => {
+  const pullRequestNumberInput = input.trim();
+  if (pullRequestNumberInput.startsWith("[")) {
+    return JSON.parse(pullRequestNumberInput);
+  }
+  const numbers: number[] = [];
+  for (const n of pullRequestNumberInput.split("\n")) {
+    const a = n
+      .split(",")
+      .map((s) => s.trim())
+      .filter((s) => s.length > 0)
+      .map(Number);
+    numbers.push(...a);
+  }
+  return numbers;
+};
+
 export const action = async () => {
   const appOctokit = newAppOctokit();
   const serverRepositoryName = core.getInput("server_repository_name", {
@@ -11,21 +32,7 @@ export const action = async () => {
   const serverRepositoryOwner = core.getInput("server_repository_owner");
   const owner = core.getInput("repository_owner") || github.context.repo.owner;
   const repo = core.getInput("repository_name") || github.context.repo.repo;
-  const pullRequestNumberInput = core.getInput("pull_request_number").trim();
-
-  let numbers: number[] = [];
-  if (pullRequestNumberInput.startsWith("[")) {
-    numbers = JSON.parse(pullRequestNumberInput);
-  } else {
-    for (const n of pullRequestNumberInput.split("\n")) {
-      const a = n
-        .split(",")
-        .map((s) => s.trim())
-        .filter((s) => s.length > 0)
-        .map(Number);
-      numbers.push(...a);
-    }
-  }
+  const numbers = parsePullRequestNumbers(core.getInput("pull_request_number"));
 
   const results = await Promise.allSettled(
     numbers.map((prNumber) =>

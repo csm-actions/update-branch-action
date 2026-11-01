@@ -4,7 +4,7 @@ import * as githubAppToken from "@suzuki-shunsuke/github-app-token";
 import { deleteLabel } from "./delete_label";
 import { newAppOctokit } from "./app_octokit";
 
-const parseLabelDescription = (
+export const parseLabelDescription = (
   description: string,
 ): { owner: string; repo: string; prNumber: number } => {
   // Format: "owner/repo/pr_number"
