@@ -33,7 +33,7 @@ on:
         required: true
 jobs:
   update_branch:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-slim # ubuntu-slim is suitable for the server workflow because it completes fast and uses less resources
     timeout-minutes: 10
     environment: main # Restrict the deployment branches to the default branch
     permissions: {}
