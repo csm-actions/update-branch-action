@@ -6,6 +6,46 @@ on:
       TAKUMI_GUARD_BOT_ID:
         required: true
 jobs:
+  # Install npm packages once and share node_modules with the test-js and release jobs,
+  # so they run in parallel against the same commit (the merge commit of the pull request)
+  npm:
+    uses: suzuki-shunsuke/download-npm-package-action/.github/workflows/download.yaml@cd93d0e45a1804793f6daaf4c24bf55ccf12f494 # v0.0.4
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      ref: refs/pull/${{github.event.pull_request.number}}/merge
+    secrets:
+      TAKUMI_GUARD_BOT_ID: ${{secrets.TAKUMI_GUARD_BOT_ID}}
+
+  # npm run lint (eslint and type check) and npm test
+  test-js:
+    uses: suzuki-shunsuke/js-action-test-workflow/.github/workflows/test.yaml@c834a7dfc9560fb54167eaf33f94eb28f1a4e222 # v0.0.4
+    needs: npm
+    permissions:
+      contents: read
+      id-token: write
+    secrets:
+      TAKUMI_GUARD_BOT_ID: ${{secrets.TAKUMI_GUARD_BOT_ID}}
+    with:
+      npm_artifact_name: node_modules
+      ref: ${{needs.npm.outputs.sha}}
+
+  release:
+    uses: suzuki-shunsuke/js-action-release-workflow/.github/workflows/release.yaml@efac7db543858e8cd879d715fc025b360636e907 # v0.0.6
+    needs: npm
+    permissions:
+      contents: write
+      pull-requests: write
+      id-token: write
+    secrets:
+      TAKUMI_GUARD_BOT_ID: ${{secrets.TAKUMI_GUARD_BOT_ID}}
+    with:
+      npm_artifact_name: node_modules
+      ref: ${{needs.npm.outputs.sha}}
+      version: pr/${{github.event.pull_request.number}}
+      pr: ${{github.event.pull_request.number}}
+
   test-workflow:
     uses: suzuki-shunsuke/test-workflow/.github/workflows/test.yaml@0b89b9b4314282810bc944364380568708208eaa # v0.0.2
     with:
@@ -13,24 +53,3 @@ jobs:
     permissions:
       contents: read
       pull-requests: read
-
-  # npm run lint (eslint and type check) and npm test
-  test-js:
-    uses: suzuki-shunsuke/js-action-test-workflow/.github/workflows/test.yaml@c834a7dfc9560fb54167eaf33f94eb28f1a4e222 # v0.0.4
-    permissions:
-      contents: read
-      id-token: write
-    secrets:
-      TAKUMI_GUARD_BOT_ID: ${{secrets.TAKUMI_GUARD_BOT_ID}}
-
-  create_pr_branch:
-    uses: ./.github/workflows/wc-create-pr-branch.yaml
-    with:
-      version: pr/${{github.event.pull_request.number}}
-      pr: ${{github.event.pull_request.number}}
-    secrets:
-      TAKUMI_GUARD_BOT_ID: ${{secrets.TAKUMI_GUARD_BOT_ID}}
-    permissions:
-      contents: write
-      pull-requests: write
-      id-token: write
