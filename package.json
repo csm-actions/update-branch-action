@@ -4,12 +4,13 @@
     "build": "ncc build src/index.ts --license LICENSE",
     "fmt": "npm ci --prefix .github/prettier --no-audit --no-fund && .github/prettier/node_modules/.bin/prettier --write .",
     "lint": "eslint && tsc --noEmit",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest --run"
   },
   "dependencies": {
     "@actions/core": "3.0.1",
     "@actions/github": "9.1.1",
-    "@csm-actions/update-branch-action": "npm:@jsr/csm-actions__update-branch-action@^0.1.0",
+    "@csm-actions/update-branch-action": "npm:@jsr/csm-actions__update-branch-action@^0.1.2",
     "@octokit/auth-app": "^8.3.1",
     "@octokit/rest": "^22.0.0",
     "@suzuki-shunsuke/actions-aws-oidc": "npm:@jsr/suzuki-shunsuke__actions-aws-oidc@^0.2.0",
@@ -21,11 +22,12 @@
     "@types/node": "24.19.2",
     "@types/tmp": "0.2.6",
     "@vercel/ncc": "0.45.0",
-    "eslint": "10.12.0",
+    "eslint": "10.14.0",
     "globals": "17.13.0",
     "jiti": "2.7.0",
     "ts-node": "10.9.2",
     "typescript": "6.0.3",
-    "typescript-eslint": "8.71.1"
+    "typescript-eslint": "8.72.1",
+    "vitest": "5.0.5"
   }
 }
