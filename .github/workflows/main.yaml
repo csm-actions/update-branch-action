@@ -5,12 +5,12 @@ on:
       - main
 jobs:
   update-latest-branch:
-    uses: ./.github/workflows/wc-create-pr-branch.yaml
-    with:
-      version: latest
+    uses: suzuki-shunsuke/js-action-release-workflow/.github/workflows/release.yaml@efac7db543858e8cd879d715fc025b360636e907 # v0.0.6
     secrets:
       TAKUMI_GUARD_BOT_ID: ${{secrets.TAKUMI_GUARD_BOT_ID}}
     permissions:
       contents: write
       pull-requests: write
       id-token: write
+    with:
+      version: latest
