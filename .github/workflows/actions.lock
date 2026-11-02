@@ -14,13 +14,9 @@ workflows:
     '.github/workflows/create-pr-branch.yaml': []
     '.github/workflows/main.yaml': []
     '.github/workflows/release.yaml': []
-    '.github/workflows/renovate-config-validator.yaml': []
     '.github/workflows/test-action.yaml':
         - 'actions/checkout@v7.0.1'
     '.github/workflows/test.yaml': []
-    '.github/workflows/typos.yaml':
-        - 'actions/checkout@v7.0.1'
-        - 'aquaproj/aqua-installer@v4.1.1'
     '.github/workflows/watch-star.yaml':
         - 'suzuki-shunsuke/watch-star-action@v0.1.1'
     '.github/workflows/wc-create-pr-branch.yaml':
@@ -29,8 +25,7 @@ workflows:
         - 'aquaproj/aqua-installer@v4.1.1'
         - 'flatt-security/setup-takumi-guard-npm@v1.4.0'
         - 'suzuki-shunsuke/release-js-action@v0.2.1'
-    '.github/workflows/workflow_call_test.yaml':
-        - 'dorny/paths-filter@v4.0.3'
+    '.github/workflows/workflow_call_test.yaml': []
 dependencies:
     'actions/checkout@v7.0.1':
         ref: 'v7.0.1'
@@ -57,11 +52,6 @@ dependencies:
         commit: 'sha1-c5b2d67aa2274e7b5a18224e8171550871fc7e4a'
         owner_id: 114818642
         repo_id: 544055925
-    'dorny/paths-filter@v4.0.3':
-        ref: 'v4.0.3'
-        commit: 'sha1-ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d'
-        owner_id: 1588572
-        repo_id: 265601040
     'flatt-security/setup-takumi-guard-npm@v1.4.0':
         ref: 'v1.4.0'
         commit: 'sha1-14f07d0cbc739b42a1b7c70a04c2b84cd1318ddd'
