@@ -30,7 +30,7 @@ jobs:
       pull-requests: write
       id-token: write # Required for OIDC
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
       - if: inputs.pr != ''
@@ -39,18 +39,18 @@ jobs:
           GITHUB_TOKEN: ${{github.token}}
           PR: ${{inputs.pr}}
 
-      - uses: aquaproj/aqua-installer@611554c6f0137ba41c8dd15aca8bee82504ea461 # v4.1.1
+      - uses: aquaproj/aqua-installer@v4.1.1
         with:
           aqua_version: v2.66.0
         env:
           GITHUB_TOKEN: ${{github.token}}
 
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+      - uses: actions/setup-node@v7.1.0
         with:
           node-version-file: .node-version
           cache-dependency-path: package-lock.json
           cache: npm
-      - uses: flatt-security/setup-takumi-guard-npm@14f07d0cbc739b42a1b7c70a04c2b84cd1318ddd # v1.4.0
+      - uses: flatt-security/setup-takumi-guard-npm@v1.4.0
         with:
           bot-id: ${{secrets.TAKUMI_GUARD_BOT_ID}}
       - run: npm ci
@@ -58,7 +58,7 @@ jobs:
       - run: npm run lint
       - run: npm run build
 
-      - uses: suzuki-shunsuke/release-js-action@ff106e3a3f5b34f174a23db3110031fbf463f15c # v0.2.1
+      - uses: suzuki-shunsuke/release-js-action@v0.2.1
         with:
           version: ${{inputs.version}}
           is_comment: ${{inputs.is_comment}}
